@@ -17,7 +17,7 @@ import random
 from copy import deepcopy
 from dm_control import suite
 import matplotlib.pyplot as plt
-get_ipython().magic(u'matplotlib inline')
+#get_ipython().magic(u'matplotlib inline')
 #from IPython.display import clear_output
 from IPython import display
 import os
@@ -132,10 +132,10 @@ class DDPG:
             
             while not time_step.last():
                 
-                #Visualize Training
-                display.clear_output(wait=True)
-                plt.imshow(self.env.physics.render())
-                plt.show()
+                ##Visualize Training
+                #display.clear_output(wait=True)
+                #plt.imshow(self.env.physics.render())
+                #plt.show()
              
                 # Get maximizing action
                 curState = Variable(obs2state(time_step.observation), volatile=True).cuda()
@@ -168,9 +168,9 @@ class DDPG:
                     
                 # Critic update
                     self.criticOptim.zero_grad()
-                    criticLoss = self.criticLoss(qPredBatch, qTargetBatch)
+                    criticLoss = self.criticLoss(qPredBatch[:,0], qTargetBatch)
                     print('Critic Loss: {}'.format(criticLoss))
-                    criticLoss.backward()
+                    criticLoss.backward(retain_graph=True)
                     self.criticOptim.step()
             
                 # Actor update
